@@ -1,6 +1,12 @@
 Getting Started with uMon for the Beaglebone Black
 
 =======================================================================
+Building:
+=======================================================================
+From umon/ports/beagleboneblack:
+$ make TOOLSET=RTEMS RTEMSVERSION=4.12 RTEMSPREFIX=$HOME/development/rtems/4.12 UMONTOP=$HOME/development/umon/main 
+
+=======================================================================
 Booting:
 =======================================================================
 

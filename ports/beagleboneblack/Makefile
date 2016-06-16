@@ -3,6 +3,19 @@
 # Beaglebone Black makefile
 #
 #
+
+ifeq ($(UMONTOP),)
+$(error UMONTOP not set)
+endif
+
+ifeq ($(RTEMSPREFIX),)
+$(error RTEMSPREFIX not set)
+endif
+
+ifeq ($(RTEMSVERSION),)
+$(error RTEMSVERSION not set)
+endif
+
 PLATFORM		= BEAGLEBONEBLACK
 TOPDIR			= $(UMONTOP)
 TGTDIR			= beagleboneblack
@@ -14,8 +27,8 @@ ifeq ($(TOOLSET),RTEMS)
 #
 # Using tools built by RTEMS Source Builder:
 #
-ABIDIR          = $(HOME)/development/rtems/4.11/lib/gcc/arm-rtems4.11/4.9.2
-TOOL_PREFIX     = arm-rtems4.11
+ABIDIR          = $(RTEMSPREFIX)/lib/gcc/arm-rtems$(RTEMSVERSION)/4.9.2
+TOOL_PREFIX     = arm-rtems$(RTEMSVERSION)
 else
 #
 # Using tools installed by "sudo apt-get install gcc-arm-none-eabi"...
