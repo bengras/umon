@@ -39,7 +39,7 @@ endif
 
 LIBABIDIR       = -L $(ABIDIR)
 COMMON_AFLAGS	= -c -D PLATFORM_$(PLATFORM)=1 -D ASSEMBLY_ONLY 
-CUSTOM_CFLAGS	= -mcpu=cortex-a8 -O2 -isystem $(ABIDIR)/include -Wno-char-subscripts
+CUSTOM_CFLAGS	= -mcpu=cortex-a8 -O2 -isystem $(ABIDIR)/include -Wno-char-subscripts -mno-unaligned-access
 
 
 ###############################################################################
@@ -48,7 +48,7 @@ CUSTOM_CFLAGS	= -mcpu=cortex-a8 -O2 -isystem $(ABIDIR)/include -Wno-char-subscri
 # The following variables are used to establish the system's memory map.
 # 
 BOOTROMBASE=0x402F0400
-BOOTROMLEN=0x010000
+BOOTROMLEN=0x01b000
 BOOTRAMBASE=0x80000000
 BOOTRAMLEN=0x010000
 RAMTSTROMBASE=0x80100000
@@ -75,7 +75,7 @@ COMCSRC		= arp.c cast.c cache.c chario.c cmdtbl.c \
 			  reg_cache.c sbrk.c sd.c \
 			  start.c struct.c symtbl.c syslog.c tcpstuff.c tfs.c tfsapi.c \
 			  tfsclean1.c tfscli.c tfsloader.c tfslog.c tftp.c timestuff.c \
-			  tsi.c xmodem.c
+			  tsi.c xmodem.c dosfs.c fatfs.c
 CPUCSRC		= except_arm.c misc_arm.c strace_arm.c 
 IODEVSRC	= uart16550.c
 FLASHSRC	=

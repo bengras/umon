@@ -176,7 +176,7 @@
 #define INCLUDE_PROFILER        0
 #define INCLUDE_BBC             0
 #define INCLUDE_STOREMAC        0
-#define INCLUDE_SHELLVARS       0
+#define INCLUDE_SHELLVARS       1
 #define INCLUDE_MALLOC          0
 #define INCLUDE_PORTCMD         0
 #define INCLUDE_SYSLOG          0
@@ -191,6 +191,7 @@
 #define INCLUDE_SD              1
 #define INCLUDE_DNS             0
 #define INCLUDE_BLINKLED        1
+#define INCLUDE_FATFS		1
 #define TARGET_BLINKLED         target_blinkled
 
 /* Inclusion of this next file will make sure that all of the above
