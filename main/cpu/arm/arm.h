@@ -76,3 +76,102 @@
 #define VEC_IRQ              5
 #define VEC_RESERVED         6
 #define VEC_FIQ              7
+
+/* Taken from RTEMS score/cpu.h */
+#define ARM_EXCEPTION_FRAME_SIZE 80
+#define ARM_EXCEPTION_FRAME_REGISTER_SP_OFFSET 52
+#define ARM_EXCEPTION_FRAME_VFP_CONTEXT_OFFSET 72
+
+#define ARM_PSR_N (1 << 31)
+#define ARM_PSR_Z (1 << 30)
+#define ARM_PSR_C (1 << 29)
+#define ARM_PSR_V (1 << 28)
+#define ARM_PSR_Q (1 << 27)
+#define ARM_PSR_J (1 << 24)
+#define ARM_PSR_GE_SHIFT 16
+#define ARM_PSR_GE_MASK (0xf << ARM_PSR_GE_SHIFT)
+#define ARM_PSR_E (1 << 9)
+#define ARM_PSR_A (1 << 8)
+#define ARM_PSR_I (1 << 7)
+#define ARM_PSR_F (1 << 6)
+#define ARM_PSR_T (1 << 5)
+#define ARM_PSR_M_SHIFT 0
+#define ARM_PSR_M_MASK (0x1f << ARM_PSR_M_SHIFT)
+#define ARM_PSR_M_USR 0x10
+#define ARM_PSR_M_FIQ 0x11
+#define ARM_PSR_M_IRQ 0x12
+#define ARM_PSR_M_SVC 0x13
+#define ARM_PSR_M_ABT 0x17
+#define ARM_PSR_M_UND 0x1b
+#define ARM_PSR_M_SYS 0x1f
+
+#ifndef _ASSEMBLY_
+
+#include "stddefs.h"
+
+/* Exception context.
+ * These data structures gratefully taken from the RTEMS
+ * source code cpukit/score/cpu/arm/rtems/score/cpu.h
+ */
+
+typedef struct {
+  uint32_t register_fpexc;
+  uint32_t register_fpscr;
+  uint64_t register_d0;
+  uint64_t register_d1;
+  uint64_t register_d2;
+  uint64_t register_d3;
+  uint64_t register_d4;
+  uint64_t register_d5;
+  uint64_t register_d6;
+  uint64_t register_d7;
+  uint64_t register_d8;
+  uint64_t register_d9;
+  uint64_t register_d10;
+  uint64_t register_d11;
+  uint64_t register_d12;
+  uint64_t register_d13;
+  uint64_t register_d14;
+  uint64_t register_d15;
+  uint64_t register_d16;
+  uint64_t register_d17;
+  uint64_t register_d18;
+  uint64_t register_d19;
+  uint64_t register_d20;
+  uint64_t register_d21;
+  uint64_t register_d22;
+  uint64_t register_d23;
+  uint64_t register_d24;
+  uint64_t register_d25;
+  uint64_t register_d26;
+  uint64_t register_d27;
+  uint64_t register_d28;
+  uint64_t register_d29;
+  uint64_t register_d30;
+  uint64_t register_d31;
+} ARM_VFP_context;
+
+typedef struct {
+  uint32_t register_r0;
+  uint32_t register_r1;
+  uint32_t register_r2;
+  uint32_t register_r3;
+  uint32_t register_r4;
+  uint32_t register_r5;
+  uint32_t register_r6;
+  uint32_t register_r7;
+  uint32_t register_r8;
+  uint32_t register_r9;
+  uint32_t register_r10;
+  uint32_t register_r11;
+  uint32_t register_r12;
+  uint32_t register_sp;
+  void *register_lr;
+  void *register_pc;
+  uint32_t register_cpsr;
+  int vector;
+  const ARM_VFP_context *vfp_context;
+  uint32_t reserved_for_stack_alignment;
+} CPU_Exception_frame;
+
+#endif

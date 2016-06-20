@@ -27,39 +27,78 @@
  *
  */
 
+#define _ASSEMBLY_ 1
+
 #include "arm.h"
 
+#define MORE_CONTEXT_SIZE \
+  (ARM_EXCEPTION_FRAME_SIZE - ARM_EXCEPTION_FRAME_REGISTER_SP_OFFSET)
+
+#define EXCEPTIONSAVE(n)         \
+	sub     sp, #MORE_CONTEXT_SIZE	 ; \
+        stmdb   sp!, {r0-r12}	 ; \
+        mov     r4, #(n)	 ; \
+	 ; \
+        b       save_more_context	 ; \
+
 .global undefined_instruction
-undefined_instruction:
-mov r1, #EXCTYPE_UNDEF
-b umon_exception
-
 .global software_interrupt
-software_interrupt:
-mov r1, #EXCTYPE_SWI
-b umon_exception
-
 .global abort_prefetch
-abort_prefetch:
-mov r1, #EXCTYPE_ABORTP
-b umon_exception
-
 .global abort_data
-abort_data:
-mov r1, #EXCTYPE_ABORTD
-b umon_exception
-
 .global not_assigned
-not_assigned:
-mov r1, #EXCTYPE_NOTASSGN
-b umon_exception
-
 .global interrupt_request
-interrupt_request:
-mov r1, #EXCTYPE_IRQ
-b umon_exception
-
 .global fast_interrupt_request
+
+undefined_instruction:
+EXCEPTIONSAVE(EXCTYPE_UNDEF)
+
+software_interrupt:
+EXCEPTIONSAVE(EXCTYPE_SWI)
+
+abort_prefetch:
+EXCEPTIONSAVE(EXCTYPE_ABORTP)
+
+abort_data:
+EXCEPTIONSAVE(EXCTYPE_ABORTD)
+
+not_assigned:
+EXCEPTIONSAVE(EXCTYPE_NOTASSGN)
+
+interrupt_request:
+EXCEPTIONSAVE(EXCTYPE_IRQ)
+
 fast_interrupt_request:
-mov r1, #EXCTYPE_FIRQ
-b umon_exception
+EXCEPTIONSAVE(EXCTYPE_FIRQ)
+
+/* This code gratefully taken from RTEMS */
+
+save_more_context:
+        /* Save more context */
+        mov     r2, lr
+        mrs     r3, spsr
+        mrs     r7, cpsr
+        orr     r5, r3, #ARM_PSR_I
+        bic     r5, #ARM_PSR_T
+        msr     cpsr, r5
+        mov     r0, sp
+        mov     r1, lr
+        msr     cpsr, r7
+        mov     r5, #0
+        add     r6, sp, #ARM_EXCEPTION_FRAME_REGISTER_SP_OFFSET
+        stm     r6, {r0-r5}
+
+        /* Argument for high level handler */
+        mov     r0, sp
+
+        /* Clear VFP context pointer */
+        add     r3, sp, #ARM_EXCEPTION_FRAME_VFP_CONTEXT_OFFSET
+        mov     r1, #0
+        str     r1, [r3]
+
+        /* Call high level handler */
+	b umon_exception
+
+        /* Just in case */
+twiddle:
+        b       twiddle
+

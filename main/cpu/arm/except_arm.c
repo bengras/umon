@@ -35,16 +35,56 @@
 ulong   ExceptionAddr;
 int ExceptionType;
 
+#define PRIx32 "lx"
+#define PRIxPTR "lx"
+
+/* Taken from RTEMS cpukit/score/cpu/arm/arm-exception-frame-print.c */
+static void _CPU_Exception_frame_print( const CPU_Exception_frame *frame )
+{
+  printf(
+    "\n"
+    "R0   = 0x%08" PRIx32 " R8  = 0x%08" PRIx32 "\n"
+    "R1   = 0x%08" PRIx32 " R9  = 0x%08" PRIx32 "\n"
+    "R2   = 0x%08" PRIx32 " R10 = 0x%08" PRIx32 "\n"
+    "R3   = 0x%08" PRIx32 " R11 = 0x%08" PRIx32 "\n"
+    "R4   = 0x%08" PRIx32 " R12 = 0x%08" PRIx32 "\n"
+    "R5   = 0x%08" PRIx32 " SP  = 0x%08" PRIx32 "\n"
+    "R6   = 0x%08" PRIx32 " LR  = 0x%08" PRIxPTR "\n"
+    "R7   = 0x%08" PRIx32 " PC  = 0x%08" PRIxPTR "\n"
+    "VEC = 0x%08" PRIxPTR "\n",
+    frame->register_r0,
+    frame->register_r8,
+    frame->register_r1,
+    frame->register_r9,
+    frame->register_r2,
+    frame->register_r10,
+    frame->register_r3,
+    frame->register_r11,
+    frame->register_r4,
+    frame->register_r12,
+    frame->register_r5,
+    frame->register_sp,
+    frame->register_r6,
+    (uint32_t) frame->register_lr,
+    frame->register_r7,
+    (uint32_t) frame->register_pc,
+    (uint32_t) frame->vector
+  );
+}
+
 /***********************************************************************
  *
  * umon_exception()
  * Default exception handler used by the low level code in vectors_arm.S.
  */
 void
-umon_exception(ulong addr, ulong type)
+umon_exception(CPU_Exception_frame *frame)
 {
-    ExceptionAddr = addr;
-    ExceptionType = type;
+    _CPU_Exception_frame_print(frame);
+
+    ExceptionAddr = (uint32_t) frame->register_pc;
+    ExceptionType = frame->vector;
+
     monrestart(EXCEPTION);
 }
 
