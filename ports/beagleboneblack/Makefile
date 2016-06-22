@@ -75,7 +75,7 @@ COMCSRC		= arp.c cast.c cache.c chario.c cmdtbl.c \
 			  reg_cache.c sbrk.c sd.c \
 			  start.c struct.c symtbl.c syslog.c tcpstuff.c tfs.c tfsapi.c \
 			  tfsclean1.c tfscli.c tfsloader.c tfslog.c tftp.c timestuff.c \
-			  tsi.c xmodem.c dosfs.c fatfs.c
+			  tsi.c xmodem.c dosfs.c fatfs.c elfloader.c
 CPUCSRC		= except_arm.c misc_arm.c strace_arm.c 
 IODEVSRC	= uart16550.c
 FLASHSRC	=
